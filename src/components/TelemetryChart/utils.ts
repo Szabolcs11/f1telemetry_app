@@ -1,4 +1,4 @@
-import { DataType } from "../types";
+import { DataType } from "../../types";
 
 export const getMinAndMaxs = (type: DataType, data: any) => {
     const config = {

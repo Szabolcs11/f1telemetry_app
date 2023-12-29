@@ -1,8 +1,10 @@
 import React from "react";
 import { AustriaData } from "./data";
-import LineChart from "./TelemetryChart/LineChart";
+import LineChart from "./components/TelemetryChart/LineChart";
 import { newdata } from "./secounddata";
 import { LapsData } from "./lapsdata";
+import Navigator from "./navigator";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const brakeData = AustriaData.map((item) => ({ lapData: item.lapData, value: item.inputdata.brake }));
@@ -17,46 +19,49 @@ function App() {
   const lapB = LapsData[1].map((item) => ({ lapData: item.lapData, value: item.inputdata.speed }));
 
   return (
-    <div>
-      <h1>Telemetriai Grafikon</h1>
-      <div style={{ margin: 20 }}>
-        <LineChart DataType="Throttle" data={throttleData} width={1500} height={800} />
-        <LineChart DataType="Brake" data={brakeData} width={1500} height={800} />
-        <LineChart
-          ChartType="Duel"
-          DataType="Throttle"
-          data={throttleData}
-          dataToCompare={brakeData}
-          dataToCompareType={"Brake"}
-          width={1500}
-          height={800}
-        />
-        <LineChart DataType="Speed" data={speedData} width={1500} height={800} />
-        <LineChart DataType="Steer" data={steerData} width={1500} height={800} />
-        <LineChart DataType="Gear" data={gerData} width={1500} height={800} />
-        <LineChart DataType="engineRPM" data={engineRPM} width={1500} height={800} />
+    <>
+      <Navigator />
+      <ToastContainer />
+      {/* <LineChart
+        ChartType="Duel"
+        DataType="Speed"
+        data={speedData}
+        dataToCompare={otherSpeedData}
+        dataToCompareType="Speed"
+        width={1500}
+        height={800}
+      /> */}
+    </>
+    // <div>
+    //   <h1>Telemetriai Grafikon</h1>
+    //   <div style={{ margin: 20 }}>
+    //     <LineChart DataType="Throttle" data={throttleData} width={1500} height={800} />
+    //     <LineChart DataType="Brake" data={brakeData} width={1500} height={800} />
+    //     <LineChart
+    //       ChartType="Duel"
+    //       DataType="Throttle"
+    //       data={throttleData}
+    //       dataToCompare={brakeData}
+    //       dataToCompareType={"Brake"}
+    //       width={1500}
+    //       height={800}
+    //     />
+    //     <LineChart DataType="Speed" data={speedData} width={1500} height={800} />
+    //     <LineChart DataType="Steer" data={steerData} width={1500} height={800} />
+    //     <LineChart DataType="Gear" data={gerData} width={1500} height={800} />
+    //     <LineChart DataType="engineRPM" data={engineRPM} width={1500} height={800} />
 
-        <LineChart
-          ChartType="Duel"
-          DataType="Speed"
-          data={speedData}
-          dataToCompare={otherSpeedData}
-          dataToCompareType="Speed"
-          width={1500}
-          height={800}
-        />
-
-        <LineChart
-          ChartType="Duel"
-          DataType="Speed"
-          data={lapA}
-          dataToCompare={lapB}
-          dataToCompareType="Speed"
-          width={1500}
-          height={800}
-        />
-      </div>
-    </div>
+    //     <LineChart
+    //       ChartType="Duel"
+    //       DataType="Speed"
+    //       data={lapA}
+    //       dataToCompare={lapB}
+    //       dataToCompareType="Speed"
+    //       width={1500}
+    //       height={800}
+    //     />
+    //   </div>
+    // </div>
   );
 }
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { LineChartProps } from "../types";
+import { LineChartProps } from "../../types";
 import { getMinAndMaxs } from "./utils";
 
 const margin = 10;
@@ -70,8 +70,10 @@ const LineChart: React.FC<LineChartProps> = ({
 
   return (
     <div>
-      <p>{ChartType == "Duel" ? `${DataType} - ${dataToCompareType} összehasonlítás` : DataType}</p>
-      <div style={{ display: "flex" }}>
+      <p style={{ textAlign: "center" }}>
+        {ChartType == "Duel" ? `${DataType} - ${dataToCompareType} összehasonlítás` : DataType}
+      </p>
+      <div style={{ display: "flex", justifyContent: "center" }}>
         <svg width={width + 100} height={height + 100} style={{}}>
           {horizontalLines}
           {verticalLines}
