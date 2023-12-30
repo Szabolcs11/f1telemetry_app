@@ -17,7 +17,8 @@ export const getMinAndMaxs = (type: DataType, data: any) => {
         return { maxY, minY };
       },
       default: () => {
-        const minX = 0;
+        // const minX = 0;
+        const minX = Math.min(...data.map((e: { lapData: any }) => e.lapData));
         const maxX = Math.max(...data.map((e: { lapData: any }) => e.lapData));
         const minY = data.reduce((max: number, item: { value: number }) => {
           return Math.min(max, item.value);

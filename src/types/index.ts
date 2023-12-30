@@ -12,7 +12,6 @@ export interface LineChartProps {
       lapData: number;
       value: number;
     }[];
-    dataToCompareType?: DataType;
     ChartType?: "Single" | "Duel";
 }
 

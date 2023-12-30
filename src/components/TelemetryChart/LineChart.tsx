@@ -4,19 +4,28 @@ import { getMinAndMaxs } from "./utils";
 
 const margin = 10;
 
-const LineChart: React.FC<LineChartProps> = ({
-  data,
-  width,
-  height,
-  DataType,
-  ChartType,
-  dataToCompare,
-  dataToCompareType,
-}) => {
+const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, ChartType, dataToCompare }) => {
+  let minXFinal = 1000;
+  let maxXFinal = -1000;
+  let minYFinal = 1000;
+  let maxYFinal = -15000;
   const { minX, maxX, minY, maxY } = getMinAndMaxs(DataType, data);
 
-  const xScale = (value: number) => ((value - minX) / (maxX - minX)) * width;
-  const yScale = (value: number) => height - ((value - minY) / (maxY - minY)) * height + margin;
+  const {
+    minX: minXToCompare,
+    maxX: maxXToCompare,
+    minY: minYToCompare,
+    maxY: maxYToCompare,
+  } = ChartType == "Duel" ? getMinAndMaxs(DataType, dataToCompare) : { minX: 1000, maxX: 0, minY: 0, maxY: 0 };
+
+  minXFinal = Math.min(minX, minXToCompare);
+  maxXFinal = Math.max(maxX, maxXToCompare);
+  minYFinal = Math.min(minY, minYToCompare);
+  maxYFinal = Math.max(maxY, maxYToCompare);
+
+  console.log(minXFinal);
+  const xScale = (value: number) => ((value - minXFinal) / (maxXFinal - minXFinal)) * width;
+  const yScale = (value: number) => height - ((value - minYFinal) / (maxYFinal - minYFinal)) * height + margin;
 
   const linePath = `M${xScale(data[0].lapData)} ${yScale(data[0].value)} ${data
     .map((point) => `L${xScale(point.lapData)} ${yScale(point.value)}`)
@@ -44,7 +53,11 @@ const LineChart: React.FC<LineChartProps> = ({
         y={percentage === 1 ? height * percentage : height * percentage + 30}
         fill={percentage === 0 || percentage === 1 ? "black" : "black"}
       >
-        {percentage === 1 ? `${minY}` : percentage === 0 ? `${maxY}` : `${(maxY - minY) * (1 - percentage) + minY}`}
+        {percentage === 1
+          ? `${minYFinal}`
+          : percentage === 0
+          ? `${maxYFinal}`
+          : `${(maxYFinal - minYFinal) * (1 - percentage) + minYFinal}`}
       </text>
     </g>
   ));
@@ -62,17 +75,17 @@ const LineChart: React.FC<LineChartProps> = ({
         {percentage === 0
           ? ``
           : percentage === 1
-          ? `${Math.floor(maxX)}`
-          : `${Math.floor((maxX - minX) * percentage + minX)}`}
+          ? `${Math.floor(maxXFinal)}`
+          : `${Math.floor((maxXFinal - minXFinal) * percentage + minXFinal)}`}
       </text>
     </g>
   ));
 
   return (
     <div>
-      <p style={{ textAlign: "center" }}>
-        {ChartType == "Duel" ? `${DataType} - ${dataToCompareType} összehasonlítás` : DataType}
-      </p>
+      <div className="fs-4 m-4" style={{ textAlign: "center" }}>
+        {ChartType == "Duel" ? `${DataType} - összehasonlítás` : DataType}
+      </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <svg width={width + 100} height={height + 100} style={{}}>
           {horizontalLines}
@@ -89,16 +102,17 @@ const LineChart: React.FC<LineChartProps> = ({
             height: 100,
             display: "flex",
             flexDirection: "column",
+            marginTop: 12,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 50, height: 20, backgroundColor: "blue" }}></div>
-            <p>{DataType}</p>
+            <div>{ChartType == "Duel" ? DataType + " - " + Math.round(maxX * 1000) / 1000 : DataType}</div>
           </div>
-          {dataToCompareType ? (
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {ChartType == "Duel" ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
               <div style={{ width: 50, height: 20, backgroundColor: "red" }}></div>
-              <p>{dataToCompareType}</p>
+              <div>{DataType + " - " + Math.round(maxXToCompare * 1000) / 1000}</div>
             </div>
           ) : (
             <></>
