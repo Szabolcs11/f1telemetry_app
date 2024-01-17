@@ -12,11 +12,13 @@ function Duel() {
   const [selectedLaps, setSelectedLaps] = useState<string[]>([]);
   const [selectedLap, setSelectedLap] = useState<string>("");
   const [selectedLapData, setSelectedLapData] = useState<LapData[]>([]);
+  const [selectedLapDataTotalTime, setSelectedLapDataTotalTime] = useState<number>(0);
 
   const [selectedSessionToCompare, setSelectedSessionToCompare] = useState<string>("");
   const [selectedLapsToCompare, setSelectedLapsToCompare] = useState<string[]>([]);
   const [selectedLapToCompare, setSelectedLapToCompare] = useState<string>("");
   const [selectedLapDataToCompare, setSelectedLapDataToCompare] = useState<LapData[]>([]);
+  const [selectedLapDataTotalTimeToCompare, setSelectedLapDataTotalTimeToCompare] = useState<number>(0);
 
   const fetchSessions = async () => {
     const res = await axios.get(ENDPOINTS.SESSIONS).catch((err) => console.log(err));
@@ -41,8 +43,20 @@ function Duel() {
     if (res?.data.success) {
       if (original) {
         setSelectedLapData(res.data.data);
+        const match = lapId.match(/_(\d+\.\d+)\.txt$/);
+        if (match) {
+          setSelectedLapDataTotalTime(parseFloat(match[1]));
+        } else {
+          setSelectedLapDataTotalTime(0);
+        }
       } else {
         setSelectedLapDataToCompare(res.data.data);
+        const match = lapId.match(/_(\d+\.\d+)\.txt$/);
+        if (match) {
+          setSelectedLapDataTotalTimeToCompare(parseFloat(match[1]));
+        } else {
+          setSelectedLapDataTotalTimeToCompare(0);
+        }
       }
     }
   };
@@ -171,7 +185,13 @@ function Duel() {
       </div>
       {selectedLapDataToCompare.length && selectedLapData.length ? (
         <div>
-          <Charts data={selectedLapData} Type="Duel" dataToCompare={selectedLapDataToCompare} />
+          <Charts
+            totalLapTime={selectedLapDataTotalTime}
+            totalLapTimeToCompare={selectedLapDataTotalTimeToCompare}
+            data={selectedLapData}
+            Type="Duel"
+            dataToCompare={selectedLapDataToCompare}
+          />
         </div>
       ) : (
         <></>

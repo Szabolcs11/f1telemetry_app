@@ -13,6 +13,7 @@ function Simple() {
   const [selectedLap, setSelectedLap] = useState<string>("");
 
   const [selectedLapData, setSelectedLapData] = useState<LapData[]>([]);
+  const [selectedLapDataTotalTime, setSelectedLapDataTotalTime] = useState<number>(0);
 
   const fetchSessions = async () => {
     const res = await axios.get(ENDPOINTS.SESSIONS).catch((err) => console.log(err));
@@ -31,6 +32,12 @@ function Simple() {
   const fetchLap = async (sessionId: string, lapId: string) => {
     const res = await axios.get(ENDPOINTS.SESSION_LAP_DATA(sessionId, lapId)).catch((err) => console.log(err));
     if (res?.data.success) {
+      const match = lapId.match(/_(\d+\.\d+)\.txt$/);
+      console.log(match);
+      if (match) {
+        setSelectedLapDataTotalTime(parseFloat(match[1]));
+      } else {
+      }
       setSelectedLapData(res.data.data);
     }
   };
@@ -96,7 +103,7 @@ function Simple() {
       )}
       {selectedLapData.length > 0 ? (
         <div style={{ width: "100%" }}>
-          <Charts Type="Single" data={selectedLapData} />
+          <Charts totalLapTime={selectedLapDataTotalTime} Type="Single" data={selectedLapData} />
         </div>
       ) : (
         <></>

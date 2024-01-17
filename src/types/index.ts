@@ -1,9 +1,11 @@
-export type DataType = "Speed" | "Brake" | "Throttle" | "Gear" | "engineRPM" | "Steer" | "DRS";
+export type DataType = "Speed" | "Brake" | "Throttle" | "Gear" | "engineRPM" | "Steer" | "DRS" | "Delta";
 
 export interface LineChartProps {
     data: {
       lapData: number;
+      lapDistance: number;
       value: number;
+      lapTime: number;
     }[];
     width: number;
     height: number;
@@ -11,6 +13,8 @@ export interface LineChartProps {
     dataToCompare?: {
       lapData: number;
       value: number;
+      lapDistance: number;
+      lapTime: number;
     }[];
     ChartType?: "Single" | "Duel";
 }
@@ -30,4 +34,5 @@ export interface LapData {
   currentLapTime: number;
   currentLapNum: number;
   currentLapInvalid: number;
+  currentLapDistance: number;
 }

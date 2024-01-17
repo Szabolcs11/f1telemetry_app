@@ -3,23 +3,27 @@ import { DataType } from "../../types";
 export const getMinAndMaxs = (type: DataType, data: any) => {
     const config = {
       Speed: () => {
+        const minX = Math.min(...data.map((e: { lapDistance: any }) => e.lapDistance));
+        const maxX = Math.max(...data.map((e: { lapDistance: any }) => e.lapDistance));
         const maxY =
           Math.ceil(
             data.reduce((max: number, item: { value: number }) => {
               return Math.max(max, item.value);
             }, 0) / 50
           ) * 50;
-        return { maxY };
+        return { maxY, minX, maxX };
       },
       Steer: () => {
+        const minX = Math.min(...data.map((e: { lapDistance: any }) => e.lapDistance));
+        const maxX = Math.max(...data.map((e: { lapDistance: any }) => e.lapDistance));
         const maxY = 1;
         const minY = -1;
-        return { maxY, minY };
+        return { maxY, minY, minX, maxX };
       },
       default: () => {
         // const minX = 0;
-        const minX = Math.min(...data.map((e: { lapData: any }) => e.lapData));
-        const maxX = Math.max(...data.map((e: { lapData: any }) => e.lapData));
+        const minX = Math.min(...data.map((e: { lapDistance: any }) => e.lapDistance));
+        const maxX = Math.max(...data.map((e: { lapDistance: any }) => e.lapDistance));
         const minY = data.reduce((max: number, item: { value: number }) => {
           return Math.min(max, item.value);
         }, 0);

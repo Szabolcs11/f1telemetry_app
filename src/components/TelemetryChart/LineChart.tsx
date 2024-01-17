@@ -5,9 +5,10 @@ import { getMinAndMaxs } from "./utils";
 const margin = 10;
 
 const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, ChartType, dataToCompare }) => {
-  let minXFinal = 1000;
-  let maxXFinal = -1000;
-  let minYFinal = 1000;
+  // console.log(data);
+  let minXFinal = 10000;
+  let maxXFinal = -10000;
+  let minYFinal = 10000;
   let maxYFinal = -15000;
   const { minX, maxX, minY, maxY } = getMinAndMaxs(DataType, data);
 
@@ -23,18 +24,25 @@ const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, Ch
   minYFinal = Math.min(minY, minYToCompare);
   maxYFinal = Math.max(maxY, maxYToCompare);
 
-  console.log(minXFinal);
+  // minYFinal = -1;
+  // maxYFinal = 1;
+  // minXFinal = 4240;
+  // minXFinal = 350;
+  // maxXFinal = 600;
+
+  // console.log(minXFinal, maxXFinal, minYFinal, maxYFinal);
+
   const xScale = (value: number) => ((value - minXFinal) / (maxXFinal - minXFinal)) * width;
   const yScale = (value: number) => height - ((value - minYFinal) / (maxYFinal - minYFinal)) * height + margin;
 
-  const linePath = `M${xScale(data[0].lapData)} ${yScale(data[0].value)} ${data
-    .map((point) => `L${xScale(point.lapData)} ${yScale(point.value)}`)
+  const linePath = `M${xScale(data[0].lapDistance)} ${yScale(data[0].value)} ${data
+    .map((point) => `L${xScale(point.lapDistance)} ${yScale(point.value)}`)
     .join(" ")}`;
 
   let otherPath;
   if (dataToCompare?.length) {
-    otherPath = `M${xScale(dataToCompare[0].lapData)} ${yScale(dataToCompare[0].value)} ${dataToCompare
-      .map((point) => `L${xScale(point.lapData)} ${yScale(point.value)}`)
+    otherPath = `M${xScale(dataToCompare[0].lapDistance)} ${yScale(dataToCompare[0].value)} ${dataToCompare
+      .map((point) => `L${xScale(point.lapDistance)} ${yScale(point.value)}`)
       .join(" ")}`;
   }
 
@@ -71,7 +79,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, Ch
         y2={height + margin}
         stroke={"gray"}
       />
-      <text x={width * percentage - 25} y={height - 10} fill={percentage === 0 || percentage === 1 ? "black" : "black"}>
+      <text x={width * percentage - 40} y={height} fill={percentage === 0 || percentage === 1 ? "black" : "black"}>
         {percentage === 0
           ? ``
           : percentage === 1
@@ -82,37 +90,44 @@ const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, Ch
   ));
 
   return (
-    <div>
-      <div className="fs-4 m-4" style={{ textAlign: "center" }}>
-        {ChartType == "Duel" ? `${DataType} - összehasonlítás` : DataType}
-      </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <svg width={width + 100} height={height + 100} style={{}}>
+    <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", justifyContent: "center", backgroundColor: "", width: "100%" }}>
+        <svg width={width + 100} height={height + 50} style={{}}>
           {horizontalLines}
           {verticalLines}
-          <path style={{ zIndex: 9999 }} d={linePath} stroke="blue" fill="none" strokeWidth={2} />
           {ChartType == "Duel" ? (
             <path style={{ zIndex: 9999 }} d={otherPath} stroke="red" fill="none" strokeWidth={2} />
           ) : (
             <></>
           )}
+          <path
+            style={{ zIndex: 9999 }}
+            d={linePath}
+            stroke="blue"
+            opacity={ChartType == "Duel" ? 0.6 : 1}
+            fill="none"
+            strokeWidth={2}
+          />
         </svg>
         <div
           style={{
-            height: 100,
             display: "flex",
             flexDirection: "column",
             marginTop: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 20,
+            width: 0,
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 50, height: 20, backgroundColor: "blue" }}></div>
-            <div>{ChartType == "Duel" ? DataType + " - " + Math.round(maxX * 1000) / 1000 : DataType}</div>
+            <div>{ChartType == "Duel" ? DataType + " - " + data[0].lapTime : DataType}</div>
           </div>
           {ChartType == "Duel" ? (
             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 12 }}>
               <div style={{ width: 50, height: 20, backgroundColor: "red" }}></div>
-              <div>{DataType + " - " + Math.round(maxXToCompare * 1000) / 1000}</div>
+              <div>{DataType + " - " + dataToCompare![0].lapTime}</div>
             </div>
           ) : (
             <></>
