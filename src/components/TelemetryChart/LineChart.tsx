@@ -23,6 +23,11 @@ const LineChart: React.FC<LineChartProps> = ({ data, width, height, DataType, Ch
   maxXFinal = Math.max(maxX, maxXToCompare);
   minYFinal = Math.min(minY, minYToCompare);
   maxYFinal = Math.max(maxY, maxYToCompare);
+  // console.log(minYFinal);
+  // console.log(maxYFinal);
+
+  minYFinal = -0.5;
+  maxYFinal = 0.5;
 
   // minYFinal = -1;
   // maxYFinal = 1;

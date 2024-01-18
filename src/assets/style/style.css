@@ -1,0 +1,14 @@
+.custom-tooltip {
+    padding: 8px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+
+.label-orange {
+    color: #FFBB28;
+}
+
+.label-blue {
+    color: #3182bd;
+}
